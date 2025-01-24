@@ -260,21 +260,57 @@ $(document).ready(function() {
         popup.classList.remove('active');
 
         number = getNumberNewStr();
-        var form_data = new FormData($('#formId')[0]);
-
-        $.ajax({
-            url: '/addDataFromLink',
-            type: 'post',
-            async: false,
-			contentType: false,
-            cache: false,
-            processData: false,
-            data: { id: number, form_data: form_data }
-        });
-
+        var url = document.getElementById("url").value;
+        var regexp = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+        if (url != "") {
+            if (!regexp.test(url)) {
+                alert("Некорректная ссылка.");
+            } else {
+                window.location.assign(url);
+                $.ajax({
+                    url: '/addDataFromLink',
+                    type: 'post',
+                    async: false,
+                    data: { id: number, url: url }
+                });
+            }
+        }
+        else {
+            alert("Ссылка отсутствует.");
+        }
     });
 
     // Конец блока для создания новой строки и обработки новых ячеек в таблице
+
+    //--------------------------------------------------
+
+    // Блок обработки нажатия кнопки "Редакторы"
+
+    let editors_popupBg = document.querySelector('.editors_popup__bg');
+    let editors_popup = document.querySelector('.editors_popup');
+    let editors_openPopupButtons = document.querySelectorAll('#btn_editors');
+    let editors_closePopupButton = document.querySelector('.editors_close-popup');
+
+    editors_openPopupButtons.forEach((button) => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            editors_popupBg.classList.add('active');
+            editors_popup.classList.add('active');
+        })
+    });
+
+    editors_closePopupButton.addEventListener('click',() => {
+        editors_popupBg.classList.remove('active');
+        editors_popup.classList.remove('active');
+    });
+
+    document.addEventListener('click', (e) => {
+        if(e.target === editors_popupBg) {
+            editors_popupBg.classList.remove('active');
+            editors_popup.classList.remove('active');
+        }
+    });
+
 });
 
 //--------------------------------------------------
@@ -291,6 +327,34 @@ function unDuplicateArraySingleValues(array) {
         return array;
     }
 }
+
+socket.on('message', function(data) {
+    var id = data.id;
+    var value = data.value;
+    $("td#" + id).text(value);
+})
+
+socket.on("editors", function(data){
+    var usernames = data.all_users
+    $('.editors_label__text2').detach();
+    var new_div ='';
+    for (var i = 0; i < usernames.length; i++) {
+        new_div += '<div class="editors_label__text2" id="' + usernames[i] + '">' + usernames[i] + '</div>'
+    }
+    $("label#editors_for_table").append(new_div);
+})
+
+socket.on("block_td", function(data){
+    var td_id = data.td_id
+    $('td#' + td_id).attr('contenteditable', false);
+    $('td#' + td_id).addClass('block');
+})
+
+socket.on("anblock_td", function(data){
+    var td_id = data.td_id
+    $('td#' + td_id).attr('contenteditable', true);
+    $('td#' + td_id).removeClass('block');
+})
 
 function outFromObject(tagOne, tagTwo) {
     $('div#edt-dv').detach();

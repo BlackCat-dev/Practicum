@@ -3,14 +3,49 @@ from flask import render_template, request, redirect
 import get_text_from_pdf
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy as sa
+from flask_socketio import SocketIO, emit, join_room, leave_room
 
 app = Flask(__name__, template_folder='template', static_folder='static')
 app.config['SECRET_KEY'] = ''
 app.config['SQLALCHEMY_DATABASE_URI'] = ''
 db = SQLAlchemy(app)
+socketio = SocketIO(app)
     
-class Meddocument(db.Model):
-    __tablename__ = "meddocument"
+class Meddocument086(db.Model):
+    __tablename__ = "meddocument086"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), default="")
+    city = db.Column(db.String(128), default="")
+    street = db.Column(db.String(255), default="")
+    house = db.Column(db.String(255), default="")
+    flat = db.Column(db.String(255), default="")
+    placeofwork = db.Column(db.String(255), default="")
+    diseases = db.Column(db.String(255), default="")
+    vaccinations = db.Column(db.String(255), default="")
+    
+class Meddocument095(db.Model):
+    __tablename__ = "meddocument095"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), default="")
+    date = db.Column(db.String(255), default="")
+    diseases = db.Column(db.String(255), default="")
+    contacts = db.Column(db.String(255), default="")
+    
+class Meddocument027(db.Model):
+    __tablename__ = "meddocument027"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), default="")
+    date = db.Column(db.String(255), default="")
+    city = db.Column(db.String(128), default="")
+    street = db.Column(db.String(255), default="")
+    house = db.Column(db.String(255), default="")
+    flat = db.Column(db.String(255), default="")
+    placeofwork = db.Column(db.String(255), default="")
+    datesoftreatment = db.Column(db.String(255), default="")
+    diagnosis = db.Column(db.String(255), default="")
+    
+class Meddocument079(db.Model):
+    __tablename__ = "meddocument079"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), default="")
     city = db.Column(db.String(128), default="")
@@ -24,10 +59,10 @@ class Meddocument(db.Model):
 with app.app_context():
         db.create_all()
 
-page_dict = {"meddocument": Meddocument}
-update_dict = {"update_meddocument": Meddocument}
-newstr_dict = {"new_line_meddocument": Meddocument}
-add_data_from_link_dict = {"addDataFromLink": Meddocument}
+page_dict = {"meddocument086": Meddocument086, "meddocument095": Meddocument095, "meddocument027": Meddocument027, "meddocument079": Meddocument079}
+update_dict = {"update_meddocument086": Meddocument086, "update_meddocument095": Meddocument095, "update_meddocument027": Meddocument027, "update_meddocument079": Meddocument079}
+newstr_dict = {"new_line_meddocument086": Meddocument086, "new_line_meddocument095": Meddocument095, "new_line_meddocument027": Meddocument027, "new_line_meddocument079": Meddocument079}
+add_data_from_link_dict = {"addDataFromLink": Meddocument086}
 
 @app.route('/', methods = ['GET', 'POST'])
 def document():
@@ -89,4 +124,4 @@ def general_page_handler(path):
         return 'Exception general_page_handler'
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)

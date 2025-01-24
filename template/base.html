@@ -28,22 +28,22 @@
         <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link " href="/" onclick="changeRoom();">
+                    <a class="nav-link " href="/meddocument086" onclick="changeRoom();">
                         <span class="nav-link-text ms-1">086/у</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="/" onclick="changeRoom();">
+                    <a class="nav-link " href="/meddocument095" onclick="changeRoom();">
                         <span class="nav-link-text ms-1">095/у</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="/" onclick="changeRoom();">
+                    <a class="nav-link " href="/meddocument027" onclick="changeRoom();">
                         <span class="nav-link-text ms-1">027/у</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="/" onclick="changeRoom();">
+                    <a class="nav-link " href="/meddocument079" onclick="changeRoom();">
                         <span class="nav-link-text ms-1">079/у</span>
                     </a>
                 </li>
@@ -65,7 +65,12 @@
         </nav>
         {% block content %}{% endblock %}
     </main>
+    <script src="{{ url_for('static', filename='dark-mode-handler.js') }}"></script>
     <script src="{{ url_for('static', filename='chartjs.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf-8" > 
+        var socket = io();
+    </script>
     <script type="text/javascript" charset="utf-8" defer src="{{ url_for('static',filename='client.js') }}"></script>
     {% block script %}{% endblock %}
 </body>

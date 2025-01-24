@@ -243,7 +243,61 @@ def get_text(file):
     diseases = search(fr'(?i)(?<={"Перенесенные заболевания"} )(\w+\s*\w+\s*\w+)', result).group()
     vaccinations = search(fr'(?i)(?<={"Профилактические прививки"} )(\w+\s*\w+)', result).group()
 
-    """ import nltk
+    import nltk
     sentences = nltk.sent_tokenize(result)
     for sentence in sentences:
-        print(sentence) """
+        print(sentence)
+        
+    #FIO
+    from natasha import NamesExtractor
+    from natasha.markup import show_markup, show_json
+
+    extractor = NamesExtractor()
+
+    matches = extractor(result)
+    spans = [_.span for _ in matches]
+    facts = [_.fact.as_json for _ in matches]
+    show_markup(result, spans)
+    show_json(facts)
+    
+    #Address
+    from natasha import AddressExtractor
+    from natasha.markup import show_markup, show_json
+
+    extractor = AddressExtractor()
+
+    matches = extractor(result)
+    spans = [_.span for _ in matches]
+    facts = [_.fact.as_json for _ in matches]
+    show_markup(result, spans)
+    show_json(facts)
+    
+    #Date
+    from yargy import rule, and_, Parser
+    from yargy.predicates import gte, lte
+
+
+    DAY = and_(
+        gte(1),
+        lte(31)
+    )
+    MONTH = and_(
+        gte(1),
+        lte(12)
+    )
+    YEAR = and_(
+        gte(1),
+        lte(2025)
+    )
+    DATE = rule(
+        DAY,
+        '.',
+        MONTH,
+        '.',
+        YEAR
+    )
+
+    parser = Parser(DATE)
+    for match in parser.findall(result):
+        print(match.span, [_.value for _ in match.tokens])
+        

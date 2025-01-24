@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Practicum | meddocument {% endblock %}
+{% block content %}
+<script src="{{ url_for('static',filename='jquery-3.7.1.min.js') }}"></script>
+<script src="{{ url_for('static',filename='popper.js') }}"></script>
+<script src="{{ url_for('static',filename='bootstrap431.js') }}"></script>
+<script type="text/javascript" charset="utf-8" defer src="{{ url_for('static',filename='index.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='tablestyle.css') }}">
+<div class="container">
+    <div class="row">
+        <div class="firstline">
+            <div style="width: 100%;">
+                <h3>Форма №079/у</h3>
+            </div>
+            <div style="padding-right: 5px; padding-top: 5px;">
+                <ul class="pagination pagination-primary">
+                    <li class="page-item">
+                        <a class="page-link" href="/" onclick="changeRoom();">
+                            <span aria-hidden="true"><i class="fa fa-angle-double-left" aria-hidden="true"></i></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div style="padding-top: 5px;">
+                <ul class="pagination pagination-primary">
+                    <li class="page-item">
+                        <a class="page-link" href="/" onclick="changeRoom();">
+                            <span aria-hidden="true"><i class="fa fa-angle-double-right" aria-hidden="true"></i></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="bagredactioninput">
+            <h5>Поле ввода:</h5>
+        </div>
+        <div class="bagredaction">
+            <div class="redaction" contenteditable="false"></div>
+        </div>
+        <table>
+            <tr>
+                <th class="nomera">№</th>
+                <th>ФИО</th>
+                <th>Город</th>
+                <th>Улица</th>
+                <th>Дом</th>
+                <th>Квартира</th>
+                <th>Место учебы/работы</th>
+                <th>Перенесенные заболевания</th>
+                <th>Профилактические прививки</th>
+            </tr>
+            {% for row in row %}
+            <tr>
+                <th class="class_id">{{row.id}}</th>
+                {% for attributes in attributes %}
+                <td contenteditable="true" class='edit' value='{{row[attributes]}}' id='{{attributes}}_{{row.id}}'>{{row[attributes]}}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+        <div class="myplus">
+            <ul class="pagination pagination-primary">
+                <li class="page-item">
+                    <a class="page-link" href="javascript:;">
+                        <span aria-hidden="true"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="popup__bg">
+            <form class="popup" id="formId">
+                <span class="close-popup" aria-hidden="true"><i class="fa fa-close" aria-hidden="true"></i></span>
+                <label>
+                    <input type="file" id="file">
+                    <div class="label__text">
+                        Выбрать файл:
+                    </div>
+                </label>
+                <button class="no-link" type="submit">Нет файла</button>
+                <button class="with-link" type="submit">Добавить</button>
+            </form>
+        </div>
+    </div>
+    <div class="tableName" id="meddocument"></div>
+</div>
+{% endblock %}
